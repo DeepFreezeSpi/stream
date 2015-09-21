@@ -143,6 +143,21 @@ interface StreamInterface
 
 
   /**
+   * Set the current position of the stream pointer, as an offset in bytes.
+   *
+   * If the stream is not seekable this method MUST throw an exception.
+   *
+   * @param int $position Offset in bytes
+   * @throws Exception\NotSupportedException The stream does not support seeking.
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @throws Exception\ExceptionInterface An unspecified I/O error occurs.
+
+   * @return void
+   */
+  public function setPosition($position);
+
+
+  /**
    * Set the read timeout to the specified value, in milliseconds.
    *
    * If the stream does not support timeout, this method MUST throw an exception.
