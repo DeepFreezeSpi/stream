@@ -1,0 +1,30 @@
+{
+  "name": "deepfreeze-spi/stream",
+  "description": "Stream Interfaces",
+  "type": "library",
+  "keywords": [
+    "stream"
+  ],
+  "require": {
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.6.0",
+    "mockery/mockery": "~0.9.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "DeepFreezeSpi\\IO\\Stream\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DeepFreezeSpiTest\\IO\\Stream\\": "test/src"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1-dev",
+      "dev-develop": "0.2-dev"
+    }
+  }
+}
