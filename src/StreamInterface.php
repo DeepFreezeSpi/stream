@@ -108,9 +108,17 @@ interface StreamInterface
 
   /**
    * Return the length of the stream contents, in bytes.
-   * If the length is unknown or indeterminate, this method will return NULL.
    *
-   * @return int|null Length of the stream, NULL if unknown.
+   * If the stream is not seekable, this method SHOULD throw an exception.
+   * In the case the stream is not seekable, but the total size is known,
+   * an implementation MAY return the value.
+   *
+   * If the stream is seekable, but the size in indeterminate or unknown, an implmentation
+   * MUST return NULL.
+   *
+   * @throws Exception\NotSupportedException The stream does not support seeking.
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @return int|null Length of the stream.
    */
   public function getLength();
 
@@ -123,6 +131,12 @@ interface StreamInterface
    *
    * If the steam is not seekable, this method MAY return a value for informational purposes only.
    *
+   * If the stream is not seekable, and the position is unknown or indeterminate (pipes, network
+   * connections, etc. where there is no clear position), an implementation MUST throw a
+   * NotSupportedException.
+   *
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @throws Exception\NotSupportedException The stream does not support seeking.
    * @return int|null current pointer within the stream, NULL if unknown.
    */
   public function getPosition();
@@ -131,9 +145,9 @@ interface StreamInterface
   /**
    * Set the read timeout to the specified value, in milliseconds.
    *
-   * If the stream does not support timeout, this method SHOULD throw an exception.
+   * If the stream does not support timeout, this method MUST throw an exception.
    *
-   * @throws Exception\InvalidOperationException
+   * @throws Exception\InvalidOperationException Timeouts not supported.
    * @param int $ms
    * @return void
    */
@@ -155,7 +169,7 @@ interface StreamInterface
    *
    * If the stream does not support Timeout values, this method MUST throw an exception.
    *
-   * @throws Exception\InvalidOperationException
+   * @throws Exception\InvalidOperationException Timeouts not supported.
    * @param int $ms
    * @return void
    */
@@ -180,9 +194,9 @@ interface StreamInterface
    * @param int $bufferSize Buffer size to use in copying streams. Leave NULL, to use the default
    *          value.
    *
-   * @throws Exception\NotSupportedException If the current stream does not support reading, or
+   * @throws Exception\NotSupportedException The current stream does not support reading, or
    *         if the destination stream does not support writing.
-   * @throws Exception\ObjectDisposedException If the current, or destination stream has been
+   * @throws Exception\ObjectDisposedException The current, or destination stream has been
    *         disposed before this call.
    * @throws Exception\ExceptionInterface Unspecified I/O Exception occurred.
    *
@@ -227,10 +241,10 @@ interface StreamInterface
    *
    * @param int $length The maximum number of bytes to read from the stream.
    *
-   * @throws Exception\InvalidArgumentException If Count is zero or negative.
-   * @throws Exception\NotSupportedException If the stream does not support reading.
-   * @throws Exception\ObjectDisposedException If the stream has been disposed.
-   * @throws Exception\ExceptionInterface If an unspecified I/O error occurs.
+   * @throws Exception\InvalidArgumentException Parameter "Count" is zero or negative.
+   * @throws Exception\NotSupportedException The stream does not support reading.
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @throws Exception\ExceptionInterface An unspecified I/O error occurs.
    * @return string Data read.
    */
   public function read($length);
@@ -249,9 +263,9 @@ interface StreamInterface
    *
    * @param int $position
    * @param string $whence Reference point to use for the position.
-   * @throws Exception\NotSupportedException If the stream does not support seeking.
-   * @throws Exception\ObjectDisposedException If the stream has been disposed.
-   * @throws Exception\ExceptionInterface If an unspecified I/O error occurs.
+   * @throws Exception\NotSupportedException The stream does not support seeking.
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @throws Exception\ExceptionInterface An unspecified I/O error occurs.
    * @return int The new position within the stream.
    */
   public function seek($position, $whence = null);
@@ -265,10 +279,10 @@ interface StreamInterface
    * scenario, the content in the newly expanded section is undefined.
    *
    * @param int $length New length for the stream
-   * @throws Exception\InvalidArgumentException If length is zero or negative.
-   * @throws Exception\NotSupportedException If the stream does not support both writing and seeking.
-   * @throws Exception\ObjectDisposedException If the stream has been disposed.
-   * @throws Exception\ExceptionInterface If an unspecified I/O error occurs.
+   * @throws Exception\InvalidArgumentException Parametetr "length" is zero or negative.
+   * @throws Exception\NotSupportedException The stream does not support both writing and seeking.
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @throws Exception\ExceptionInterface An unspecified I/O error occurs.
    * @return void
    */
   public function setLength($length);
@@ -281,10 +295,10 @@ interface StreamInterface
    *
    * @param string $data
    * @param int $length
-   * @throws Exception\InvalidArgumentException If length is negative.
-   * @throws Exception\NotSupportedException If the stream does not support writing.
-   * @throws Exception\ObjectDisposedException If the stream has been disposed.
-   * @throws Exception\ExceptionInterface If an unspecified I/O error occurs.
+   * @throws Exception\InvalidArgumentException Parameter "length" is negative.
+   * @throws Exception\NotSupportedException The stream does not support writing.
+   * @throws Exception\ObjectDisposedException The stream has been disposed.
+   * @throws Exception\ExceptionInterface An unspecified I/O error occurs.
    * @return void
    */
   public function write($data, $length = null);
